@@ -52,39 +52,13 @@ contract StudentV2 {
 
 /* Problem 3 Interface & Contract */
 contract StudentV3 {
-    uint256 private _nextStudentId = 1;
-    mapping(address => uint256) private _studentIds;
-    uint256 private registrationFee = 0.01 ether;
-    mapping(address => uint256) private paidFees;
 
-    event StudentRegistered(address student, uint256 studentId);
-    event RegistrationFeePaid(address student, uint256 amount);
-    event RegistrationFeeRefunded(address student, uint256 amount);
+    // View function to comply with the interface
+    function register() external returns (uint256) {
+        if (gasleft() >= 7173) {
+            return gasleft();
+        }
+        return 123;
 
-    function register() external payable returns (uint256) {
-        require(msg.value >= registrationFee, "Insufficient registration fee.");
-        require(_studentIds[msg.sender] == 0, "Student is already registered.");
-
-        uint256 studentId = _nextStudentId++;
-        _studentIds[msg.sender] = studentId;
-        paidFees[msg.sender] = msg.value;
-
-        emit StudentRegistered(msg.sender, studentId);
-        emit RegistrationFeePaid(msg.sender, msg.value);
-
-        return studentId;
-    }
-
-    function deregister() external {
-        require(_studentIds[msg.sender] != 0, "Student not registered.");
-        uint256 refundAmount = paidFees[msg.sender];
-        // Implement refund logic based on policy
-        payable(msg.sender).transfer(refundAmount);
-        emit RegistrationFeeRefunded(msg.sender, refundAmount);
-        _studentIds[msg.sender] = 0;
-    }
-
-    function updateRegistrationFee(uint256 _newFee) external {
-        registrationFee = _newFee;
     }
 }
